@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import com.example.helloandroid.DishDetailActivity;
 import com.example.helloandroid.DishFragment;
 import com.example.helloandroid.model.FoodMenu;
 

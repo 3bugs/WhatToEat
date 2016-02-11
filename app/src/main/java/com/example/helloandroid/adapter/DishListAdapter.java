@@ -1,19 +1,18 @@
 package com.example.helloandroid.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.helloandroid.MainActivity;
+import com.bumptech.glide.Glide;
 import com.example.helloandroid.R;
 import com.example.helloandroid.model.Dish;
+import com.example.helloandroid.net.WebServices;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by COM_00 on 11/2/2559.
@@ -44,8 +43,9 @@ public class DishListAdapter extends ArrayAdapter<Dish> {
         dishNameTextView.setText(dish.name);
 
         // ใส่รูปภาพอาหารลงใน ImageView ภายใน layout
-        Drawable dishImage = MainActivity.getDrawableFromAssets(mContext, dish.fileName);
-        dishImageView.setImageDrawable(dishImage);
+        //Drawable dishImage = MainActivity.getDrawableFromAssets(mContext, dish.fileName);
+        //dishImageView.setImageDrawable(dishImage);
+        Glide.with(mContext).load(WebServices.IMAGES_BASE_URL + dish.fileName).into(dishImageView);
 
         return itemLayout;
     }

@@ -1,13 +1,13 @@
 package com.example.helloandroid;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.drawable.Drawable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.helloandroid.model.Dish;
 import com.example.helloandroid.model.FoodMenu;
@@ -25,7 +24,6 @@ import com.example.helloandroid.model.FoodMenu;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loadData();
 
         Button randomButton = (Button) findViewById(R.id.random_button); // ปุ่ม Random
         Button exitButton = (Button) findViewById(R.id.exit_button);     // ปุ่ม Exit
@@ -78,6 +78,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+    }
+
+    private void loadData() {
+        final ProgressDialog progress = new ProgressDialog(MainActivity.this);
+        progress.setMessage("Loading...");
+        progress.setIndeterminate(true);
+        progress.setCancelable(false);
+        progress.show();
+
+        FoodMenu foodMenu = FoodMenu.getInstance(this);
+        foodMenu.loadFromWebService(new FoodMenu.GetDishListCallback() {
+            @Override
+            public void onFinish(ArrayList<Dish> dishList) {
+                progress.dismiss();
             }
         });
     }

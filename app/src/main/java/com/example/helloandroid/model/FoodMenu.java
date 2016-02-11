@@ -6,7 +6,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.example.helloandroid.db.DatabaseHelper;
+import com.example.helloandroid.net.WebServices;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -49,10 +52,29 @@ public class FoodMenu {
 */
         mContext = context;
 
+/*
         mHelper = new DatabaseHelper(context);
         mDatabase = mHelper.getWritableDatabase();
 
         loadFromDatabase();
+*/
+    }
+
+    public void loadFromWebService(final GetDishListCallback callback) {
+        WebServices.getDishes(new WebServices.GetDishesFromWebServiceCallback() {
+            @Override
+            public void onFailure(IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(ResponseStatus responseStatus, ArrayList<Dish> dishList) {
+                mDishList = dishList;
+                if (callback != null) {
+                    callback.onFinish(mDishList);
+                }
+            }
+        });
     }
 
     private void loadFromDatabase() {
@@ -80,7 +102,34 @@ public class FoodMenu {
         return randomDish;
     }
 
+    public interface GetDishListCallback {
+        void onFinish(ArrayList<Dish> dishList);
+    }
+
     public ArrayList<Dish> getDishList() {
         return mDishList;
+    }
+
+    public interface AddDishCallback {
+        void onFinish();
+    }
+
+    public void addDish(String name, File file, final AddDishCallback callback) {
+        WebServices.addDish(name, file, new WebServices.AddDishToWebServiceCallback() {
+            @Override
+            public void onFailure(IOException e) {}
+
+            @Override
+            public void onResponse(ResponseStatus responseStatus) {
+                if (responseStatus.success) {
+                    loadFromWebService(new GetDishListCallback() {
+                        @Override
+                        public void onFinish(ArrayList<Dish> dishList) {
+                            callback.onFinish();
+                        }
+                    });
+                }
+            }
+        });
     }
 }
