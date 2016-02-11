@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">What To Eat</string>
+    <string name="app_title">กินอะไรดี</string>
+    <string name="exit_button_text">ปิด</string>
+    <string name="random_button_text">สุ่มอาหาร</string>
+</resources>
